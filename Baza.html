@@ -83,6 +83,14 @@
         </div>
     </section>
 
+    <!-- Nowy przycisk do przekierowania -->
+    <section>
+        <h2>Test na Interwały</h2>
+        <button onclick="window.location.href='https://domistudioo.github.io/interval-test/Baza.html';">
+            Przejdź do testu na interwały
+        </button>
+    </section>
+
     <script>
         // Lista nut .mp3 dla oktaw 2, 3, i 4
         const notes = {
@@ -126,106 +134,105 @@
             audio.play();
         }
 
-       // Funkcja odtwarzania interwałów
-function playInterval(interval) {
-    let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
-    const noteNames = Object.keys(notes);
-    const baseIndex = noteNames.indexOf(baseNote);
-    const nextNoteIndex = (baseIndex + interval) % noteNames.length;
-    let nextNote = noteNames[nextNoteIndex];
+        // Funkcja odtwarzania interwałów
+        function playInterval(interval) {
+            let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
+            const noteNames = Object.keys(notes);
+            const baseIndex = noteNames.indexOf(baseNote);
+            const nextNoteIndex = (baseIndex + interval) % noteNames.length;
+            let nextNote = noteNames[nextNoteIndex];
 
-    const isSequential = document.getElementById('sequential').checked;
-    const isTogether = document.getElementById('together').checked;
-    const direction = document.querySelector('input[name="direction"]:checked').value;
+            const isSequential = document.getElementById('sequential').checked;
+            const isTogether = document.getElementById('together').checked;
+            const direction = document.querySelector('input[name="direction"]:checked').value;
 
-    // Zamiana miejsc, jeśli z góry na dół
-    if (direction === 'down') {
-        [baseNote, nextNote] = [nextNote, baseNote];
-    }
+            // Zamiana miejsc, jeśli z góry na dół
+            if (direction === 'down') {
+                [baseNote, nextNote] = [nextNote, baseNote];
+            }
 
-    if (isSequential) {
-        playNoteAudio(baseNote);
-        setTimeout(() => playNoteAudio(nextNote), 1000);
-    }
+            if (isSequential) {
+                playNoteAudio(baseNote);
+                setTimeout(() => playNoteAudio(nextNote), 1000);
+            }
 
-    if (isSequential && isTogether) {
-        setTimeout(() => {
-            playNoteAudio(baseNote);
-            playNoteAudio(nextNote);
-        }, 2000); // Odtwarzanie razem po sekwencji
-    }
+            if (isSequential && isTogether) {
+                setTimeout(() => {
+                    playNoteAudio(baseNote);
+                    playNoteAudio(nextNote);
+                }, 2000); // Odtwarzanie razem po sekwencji
+            }
 
-    if (isTogether && !isSequential) {
-        playNoteAudio(baseNote);
-        playNoteAudio(nextNote);
-    }
-}
+            if (isTogether && !isSequential) {
+                playNoteAudio(baseNote);
+                playNoteAudio(nextNote);
+            }
+        }
 
-// Funkcja odtwarzania trójdźwięków
-function playChord(type) {
-    let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
-    let intervals = [];
-    switch (type) {
-        case 'minor':
-            intervals = [0, 3, 7];
-            break;
-        case 'minor1':
-            intervals = [3, 7, 12];
-            break;
-        case 'minor2':
-            intervals = [7, 12, 15];
-            break;
-        case 'major':
-            intervals = [0, 4, 7];
-            break;
-        case 'major1':
-            intervals = [4, 7, 12];
-            break;
-        case 'major2':
-            intervals = [7, 12, 16];
-            break;
-        case 'augmented':
-            intervals = [0, 4, 8];
-            break;
-        case 'diminished':
-            intervals = [0, 3, 6];
-            break;
-    }
+        // Funkcja odtwarzania trójdźwięków
+        function playChord(type) {
+            let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
+            let intervals = [];
+            switch (type) {
+                case 'minor':
+                    intervals = [0, 3, 7];
+                    break;
+                case 'minor1':
+                    intervals = [3, 7, 12];
+                    break;
+                case 'minor2':
+                    intervals = [7, 12, 15];
+                    break;
+                case 'major':
+                    intervals = [0, 4, 7];
+                    break;
+                case 'major1':
+                    intervals = [4, 7, 12];
+                    break;
+                case 'major2':
+                    intervals = [7, 12, 16];
+                    break;
+                case 'augmented':
+                    intervals = [0, 4, 8];
+                    break;
+                case 'diminished':
+                    intervals = [0, 3, 6];
+                    break;
+            }
 
-    const noteNames = Object.keys(notes);
-    const baseIndex = noteNames.indexOf(baseNote);
+            const noteNames = Object.keys(notes);
+            const baseIndex = noteNames.indexOf(baseNote);
 
-    const notesToPlay = intervals.map(interval => {
-        const noteIndex = (baseIndex + interval) % noteNames.length;
-        return noteNames[noteIndex];
-    });
+            const notesToPlay = intervals.map(interval => {
+                const noteIndex = (baseIndex + interval) % noteNames.length;
+                return noteNames[noteIndex];
+            });
 
-    const isSequential = document.getElementById('sequential').checked;
-    const isTogether = document.getElementById('together').checked;
-    const direction = document.querySelector('input[name="direction"]:checked').value;
+            const isSequential = document.getElementById('sequential').checked;
+            const isTogether = document.getElementById('together').checked;
+            const direction = document.querySelector('input[name="direction"]:checked').value;
 
-    // Odwracanie kolejności nut dla kierunku z góry na dół
-    if (direction === 'down') {
-        notesToPlay.reverse();
-    }
+            // Odwracanie kolejności nut dla kierunku z góry na dół
+            if (direction === 'down') {
+                notesToPlay.reverse();
+            }
 
-    if (isSequential) {
-        notesToPlay.forEach((note, index) => {
-            setTimeout(() => playNoteAudio(note), index * 500);
-        });
-    }
+            if (isSequential) {
+                notesToPlay.forEach((note, index) => {
+                    setTimeout(() => playNoteAudio(note), index * 500);
+                });
+            }
 
-    if (isSequential && isTogether) {
-        setTimeout(() => {
-            notesToPlay.forEach(note => playNoteAudio(note));
-        }, notesToPlay.length * 500); // Odtwarzanie razem po sekwencji
-    }
+            if (isSequential && isTogether) {
+                setTimeout(() => {
+                    notesToPlay.forEach(note => playNoteAudio(note));
+                }, notesToPlay.length * 500); // Odtwarzanie razem po sekwencji
+            }
 
-    if (isTogether && !isSequential) {
-        notesToPlay.forEach(note => playNoteAudio(note));
-    }
-}
-
+            if (isTogether && !isSequential) {
+                notesToPlay.forEach(note => playNoteAudio(note));
+            }
+        }
     </script>
 </body>
 </html>
