@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interwały i Trójdźwięki</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        .test-controls {
+            margin-top: 20px;
+        }
+        .feedback {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .section {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interwały i Trójdźwięki</h1>
+
+    <!-- Opcje -->
+    <section>
+        <h2>Opcje odtwarzania</h2>
+        <div>
+            <label><input type="checkbox" id="sequential" /> Po kolei</label>
+            <label><input type="checkbox" id="together" /> Razem</label>
+        </div>
+        <div>
+            <label><input type="radio" name="direction" value="up" checked /> Z dołu do góry</label>
+            <label><input type="radio" name="direction" value="down" /> Z góry na dół</label>
+        </div>
+    </section>
+
+    <!-- Interwały -->
+    <section>
+        <h2>Interwały</h2>
+        <div>
+            <button onclick="playInterval(0)">Pryma</button>
+            <button onclick="playInterval(1)">Sekunda mała</button>
+            <button onclick="playInterval(2)">Sekunda wielka</button>
+            <button onclick="playInterval(3)">Tercja mała</button>
+            <button onclick="playInterval(4)">Tercja wielka</button>
+            <button onclick="playInterval(5)">Kwarta czysta</button>
+            <button onclick="playInterval(6)">Tryton</button>
+            <button onclick="playInterval(7)">Kwinta czysta</button>
+            <button onclick="playInterval(8)">Seksta mała</button>
+            <button onclick="playInterval(9)">Seksta wielka</button>
+            <button onclick="playInterval(10)">Septyma mała</button>
+            <button onclick="playInterval(11)">Septyma wielka</button>
+            <button onclick="playInterval(12)">Oktawa</button>
+        </div>
+    </section>
+
+    <!-- Trójdźwięki -->
+    <section>
+        <h2>Trójdźwięki</h2>
+        <div>
+            <button onclick="playChord('minor')">Molowy (Postać zasadnicza)</button>
+            <button onclick="playChord('minor1')">Molowy (I przewrót)</button>
+            <button onclick="playChord('minor2')">Molowy (II przewrót)</button>
+            <button onclick="playChord('major')">Durowy (Postać zasadnicza)</button>
+            <button onclick="playChord('major1')">Durowy (I przewrót)</button>
+            <button onclick="playChord('major2')">Durowy (II przewrót)</button>
+            <button onclick="playChord('augmented')">Zwiększony</button>
+            <button onclick="playChord('diminished')">Zmniejszony</button>
+        </div>
+    </section>
+
+    <script>
+        // Lista nut .mp3 dla oktaw 2, 3, i 4
+        const notes = {
+            'C2': '16.mp3',
+            'C#2': '17.mp3',
+            'D2': '18.mp3',
+            'D#2': '19.mp3',
+            'E2': '20.mp3',
+            'F2': '21.mp3',
+            'F#2': '22.mp3',
+            'G2': '23.mp3',
+            'G#2': '24.mp3',
+            'A2': '25.mp3',
+            'A#2': '26.mp3',
+            'B2': '27.mp3',
+            'C3': '28.mp3',
+            'C#3': '29.mp3',
+            'D3': '30.mp3',
+            'D#3': '31.mp3',
+            'E3': '32.mp3',
+            'F3': '33.mp3',
+            'F#3': '34.mp3',
+            'G3': '35.mp3',
+            'G#3': '36.mp3',
+            'A3': '37.mp3',
+            'A#3': '38.mp3',
+            'B3': '39.mp3',
+            'C4': '40.mp3',
+            'C#4': '41.mp3',
+            'D4': '42.mp3',
+            'D#4': '43.mp3',
+            'E4': '44.mp3',
+            'F4': '45.mp3',
+            'F#4': '46.mp3',
+            'G4': '47.mp3'
+        };
+
+        // Funkcja odtwarzania pojedynczego dźwięku
+        function playNoteAudio(note) {
+            const audio = new Audio(notes[note]);
+            audio.play();
+        }
+
+        // Funkcja odtwarzania interwałów
+        function playInterval(interval) {
+            let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
+            const noteNames = Object.keys(notes);
+            const baseIndex = noteNames.indexOf(baseNote);
+            const nextNoteIndex = (baseIndex + interval) % noteNames.length;
+            const nextNote = noteNames[nextNoteIndex];
+
+            const isSequential = document.getElementById('sequential').checked;
+            const isTogether = document.getElementById('together').checked;
+            const direction = document.querySelector('input[name="direction"]:checked').value;
+
+            if (direction === 'down') {
+                [baseNote, nextNote] = [nextNote, baseNote];
+            }
+
+            if (isSequential) {
+                playNoteAudio(baseNote);
+                setTimeout(() => playNoteAudio(nextNote), 1000);
+            }
+
+            if (isTogether && !isSequential) {
+                playNoteAudio(baseNote);
+                playNoteAudio(nextNote);
+            }
+        }
+
+        // Funkcja odtwarzania trójdźwięków
+        function playChord(type) {
+            let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
+            let intervals = [];
+            switch (type) {
+                case 'minor':
+                    intervals = [0, 3, 7];
+                    break;
+                case 'minor1':
+                    intervals = [3, 7, 12];
+                    break;
+                case 'minor2':
+                    intervals = [7, 12, 15];
+                    break;
+                case 'major':
+                    intervals = [0, 4, 7];
+                    break;
+                case 'major1':
+                    intervals = [4, 7, 12];
+                    break;
+                case 'major2':
+                    intervals = [7, 12, 16];
+                    break;
+                case 'augmented':
+                    intervals = [0, 4, 8];
+                    break;
+                case 'diminished':
+                    intervals = [0, 3, 6];
+                    break;
+            }
+
+            const noteNames = Object.keys(notes);
+            const baseIndex = noteNames.indexOf(baseNote);
+
+            const notesToPlay = intervals.map(interval => {
+                const noteIndex = (baseIndex + interval) % noteNames.length;
+                return noteNames[noteIndex];
+            });
+
+            const isSequential = document.getElementById('sequential').checked;
+            const isTogether = document.getElementById('together').checked;
+            const direction = document.querySelector('input[name="direction"]:checked').value;
+
+            if (direction === 'down') {
+                notesToPlay.reverse();
+            }
+
+            if (isSequential) {
+                notesToPlay.forEach((note, index) => {
+                    setTimeout(() => playNoteAudio(note), index * 500);
+                });
+            }
+
+            if (isTogether && !isSequential) {
+                notesToPlay.forEach(note => playNoteAudio(note));
+            }
+        }
+    </script>
+</body>
+</html>
