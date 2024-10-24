@@ -126,90 +126,106 @@
             audio.play();
         }
 
-        // Funkcja odtwarzania interwałów
-        function playInterval(interval) {
-            let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
-            const noteNames = Object.keys(notes);
-            const baseIndex = noteNames.indexOf(baseNote);
-            const nextNoteIndex = (baseIndex + interval) % noteNames.length;
-            const nextNote = noteNames[nextNoteIndex];
+       // Funkcja odtwarzania interwałów
+function playInterval(interval) {
+    let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
+    const noteNames = Object.keys(notes);
+    const baseIndex = noteNames.indexOf(baseNote);
+    const nextNoteIndex = (baseIndex + interval) % noteNames.length;
+    let nextNote = noteNames[nextNoteIndex];
 
-            const isSequential = document.getElementById('sequential').checked;
-            const isTogether = document.getElementById('together').checked;
-            const direction = document.querySelector('input[name="direction"]:checked').value;
+    const isSequential = document.getElementById('sequential').checked;
+    const isTogether = document.getElementById('together').checked;
+    const direction = document.querySelector('input[name="direction"]:checked').value;
 
-            if (direction === 'down') {
-                [baseNote, nextNote] = [nextNote, baseNote];
-            }
+    // Zamiana miejsc, jeśli z góry na dół
+    if (direction === 'down') {
+        [baseNote, nextNote] = [nextNote, baseNote];
+    }
 
-            if (isSequential) {
-                playNoteAudio(baseNote);
-                setTimeout(() => playNoteAudio(nextNote), 1000);
-            }
+    if (isSequential) {
+        playNoteAudio(baseNote);
+        setTimeout(() => playNoteAudio(nextNote), 1000);
+    }
 
-            if (isTogether && !isSequential) {
-                playNoteAudio(baseNote);
-                playNoteAudio(nextNote);
-            }
-        }
+    if (isSequential && isTogether) {
+        setTimeout(() => {
+            playNoteAudio(baseNote);
+            playNoteAudio(nextNote);
+        }, 2000); // Odtwarzanie razem po sekwencji
+    }
 
-        // Funkcja odtwarzania trójdźwięków
-        function playChord(type) {
-            let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
-            let intervals = [];
-            switch (type) {
-                case 'minor':
-                    intervals = [0, 3, 7];
-                    break;
-                case 'minor1':
-                    intervals = [3, 7, 12];
-                    break;
-                case 'minor2':
-                    intervals = [7, 12, 15];
-                    break;
-                case 'major':
-                    intervals = [0, 4, 7];
-                    break;
-                case 'major1':
-                    intervals = [4, 7, 12];
-                    break;
-                case 'major2':
-                    intervals = [7, 12, 16];
-                    break;
-                case 'augmented':
-                    intervals = [0, 4, 8];
-                    break;
-                case 'diminished':
-                    intervals = [0, 3, 6];
-                    break;
-            }
+    if (isTogether && !isSequential) {
+        playNoteAudio(baseNote);
+        playNoteAudio(nextNote);
+    }
+}
 
-            const noteNames = Object.keys(notes);
-            const baseIndex = noteNames.indexOf(baseNote);
+// Funkcja odtwarzania trójdźwięków
+function playChord(type) {
+    let baseNote = 'C3'; // Ustalanie początkowej nuty, możesz zmienić na losową
+    let intervals = [];
+    switch (type) {
+        case 'minor':
+            intervals = [0, 3, 7];
+            break;
+        case 'minor1':
+            intervals = [3, 7, 12];
+            break;
+        case 'minor2':
+            intervals = [7, 12, 15];
+            break;
+        case 'major':
+            intervals = [0, 4, 7];
+            break;
+        case 'major1':
+            intervals = [4, 7, 12];
+            break;
+        case 'major2':
+            intervals = [7, 12, 16];
+            break;
+        case 'augmented':
+            intervals = [0, 4, 8];
+            break;
+        case 'diminished':
+            intervals = [0, 3, 6];
+            break;
+    }
 
-            const notesToPlay = intervals.map(interval => {
-                const noteIndex = (baseIndex + interval) % noteNames.length;
-                return noteNames[noteIndex];
-            });
+    const noteNames = Object.keys(notes);
+    const baseIndex = noteNames.indexOf(baseNote);
 
-            const isSequential = document.getElementById('sequential').checked;
-            const isTogether = document.getElementById('together').checked;
-            const direction = document.querySelector('input[name="direction"]:checked').value;
+    const notesToPlay = intervals.map(interval => {
+        const noteIndex = (baseIndex + interval) % noteNames.length;
+        return noteNames[noteIndex];
+    });
 
-            if (direction === 'down') {
-                notesToPlay.reverse();
-            }
+    const isSequential = document.getElementById('sequential').checked;
+    const isTogether = document.getElementById('together').checked;
+    const direction = document.querySelector('input[name="direction"]:checked').value;
 
-            if (isSequential) {
-                notesToPlay.forEach((note, index) => {
-                    setTimeout(() => playNoteAudio(note), index * 500);
-                });
-            }
+    // Odwracanie kolejności nut dla kierunku z góry na dół
+    if (direction === 'down') {
+        notesToPlay.reverse();
+    }
 
-            if (isTogether && !isSequential) {
-                notesToPlay.forEach(note => playNoteAudio(note));
-            }
-        }
+    if (isSequential) {
+        notesToPlay.forEach((note, index) => {
+            setTimeout(() => playNoteAudio(note), index * 500);
+        });
+    }
+
+    if (isSequential && isTogether) {
+        setTimeout(() => {
+            notesToPlay.forEach(note => playNoteAudio(note));
+        }, notesToPlay.length * 500); // Odtwarzanie razem po sekwencji
+    }
+
+    if (isTogether && !isSequential) {
+        notesToPlay.forEach(note => playNoteAudio(note));
+    }
+}
+
     </script>
 </body>
 </html>
